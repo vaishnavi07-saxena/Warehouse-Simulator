@@ -1,0 +1,25 @@
+.outside {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #0f0f0f;
+  color: white;
+}
+
+.card {
+  width: min(520px, 90vw);
+  padding: 30px;
+  border-radius: 16px;
+  background: #1a1a1a;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+button {
+  margin-top: 16px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}

@@ -1,0 +1,22 @@
+<div class="hud-container">
+  <div class="action-buttons">
+    <button class="btn primary" (click)="exit.emit()">Enter Warehouse</button>
+    <button class="btn secondary" (click)="exit.emit()">Exit Warehouse</button>
+  </div>
+
+  <div class="movement-overlay">
+    <div class="wasd-text">WASD</div>
+    <div class="arrows">
+      <span class="arrow left">←</span>
+      <span class="arrow up">↑</span>
+      <span class="arrow up">↑</span>
+      <span class="arrow right">→</span>
+    </div>
+  </div>
+
+  <div class="minimap-container">
+    <div class="minimap">
+      <div class="player-dot"></div>
+    </div>
+  </div>
+</div>

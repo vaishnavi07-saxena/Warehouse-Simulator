@@ -1,0 +1,121 @@
+.hud {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 10;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.exit {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.info {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.hud-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Taaki mouse drag background mein kaam kare */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Bottom Left Buttons */
+.action-buttons {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 25px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  width: 180px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.btn.primary { background: #add8e6; color: #333; }
+.btn.secondary { background: #add8e6; color: #333; }
+.btn:hover { filter: brightness(1.1); }
+
+/* Center Movement Overlay */
+.movement-overlay {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wasd-text {
+  font-size: 42px;
+  letter-spacing: 8px;
+  margin-bottom: 5px;
+}
+
+.arrows {
+  display: flex;
+  gap: 20px;
+  font-size: 32px;
+}
+
+/* Top Right Mini-map */
+.minimap-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.minimap {
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-radius: 50%; /* Circle look like image */
+  position: relative;
+  backdrop-filter: blur(5px);
+}
+
+.player-dot {
+  width: 10px;
+  height: 10px;
+  background: #00f2ff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #00f2ff;
+}
+
+/* hud.component.css mein check karein */
+.hud-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Ye line honi chahiye taaki mouse 3D scene tak pahunche */
+}
+
+.action-bar, .nav-btn {
+  pointer-events: auto; /* Sirf buttons ko click hone layak banayein */
+}
