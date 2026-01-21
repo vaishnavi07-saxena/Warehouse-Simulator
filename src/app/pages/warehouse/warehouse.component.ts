@@ -182,12 +182,12 @@ export class WarehouseComponent implements AfterViewInit {
   }
 
   // 4. Center Reference (Optional Red Cube)
-  const testCube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshStandardMaterial({ color: 'red' })
-  );
-  testCube.position.set(0, 0.5, 0); // Ground level par
-  this.scene.add(testCube);
+  // const testCube = new THREE.Mesh(
+  //   new THREE.BoxGeometry(1, 1, 1),
+  //   new THREE.MeshStandardMaterial({ color: 'red' })
+  // );
+  // testCube.position.set(0, 0.5, 0); // Ground level par
+  // this.scene.add(testCube);
 }
 
   private createShelf(length: number, height: number) {
