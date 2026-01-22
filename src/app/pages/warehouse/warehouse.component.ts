@@ -87,6 +87,20 @@ export class WarehouseComponent implements AfterViewInit {
     this.camera.lookAt(0, 1.6, 0);
 
     this.scene.background = new THREE.Color('#1a1a1a');
+  
+  // Floor with grid for Street View feel
+  const floorGeo = new THREE.PlaneGeometry(100, 100);
+  const floorMat = new THREE.MeshStandardMaterial({ 
+    color: '#222222', 
+    roughness: 0.8 
+  });
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.rotation.x = -Math.PI / 2;
+  this.scene.add(floor);
+
+  // Add Grid Helper
+  const grid = new THREE.GridHelper(100, 50, 0x444444, 0x222222);
+  this.scene.add(grid);
 
   // Lights - Image jaisa soft look
   const ambient = new THREE.AmbientLight(0xffffff, 0.5);
