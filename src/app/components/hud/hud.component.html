@@ -1,15 +1,17 @@
 <div class="hud-container">
   <div class="action-buttons">
-    <button class="btn secondary" (click)="exit.emit()">Exit Warehouse</button>
+    <button class="btn secondary" (click)="exit.emit()">
+      <span style="margin-right: 8px;">←</span> Exit Warehouse
+    </button>
   </div>
 
   <div class="movement-overlay">
     <div class="wasd-text">WASD</div>
     <div class="arrows">
-      <span class="arrow left">←</span>
-      <span class="arrow up">↑</span>
-      <span class="arrow up">↑</span>
-      <span class="arrow right">→</span>
+      <span class="arrow">←</span>
+      <span class="arrow">↑</span>
+      <span class="arrow">↓</span>
+      <span class="arrow">→</span>
     </div>
   </div>
 </div>

@@ -1,91 +1,69 @@
-.hud {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  z-index: 10;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.exit {
-  padding: 10px 14px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.info {
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
 .hud-container {
   position: absolute;
   inset: 0;
-  pointer-events: none; /* Taaki mouse drag background mein kaam kare */
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
-/* Bottom Left Buttons */
+/* Exit Button Styling */
 .action-buttons {
   pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
-.btn {
-  padding: 10px 25px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
+.btn.secondary {
+  /* Glassmorphism look */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 25px;
+  border-radius: 8px;
   font-weight: 500;
-  width: 180px;
-  text-align: left;
-  transition: 0.3s;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: auto; /* Width fixed hatake auto rakha hai taaki button natural dikhe */
 }
 
-.btn.primary { background: #add8e6; color: #333; }
-.btn.secondary { background: #add8e6; color: #333; }
-.btn:hover { filter: brightness(1.1); }
+.btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
 
-/* Center Movement Overlay */
+/* Center Movement Overlay (WASD) */
 .movement-overlay {
   position: absolute;
-  bottom: 80px;
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-  color: rgba(255, 255, 255, 0.7);
+  /* Soft greyish-white taaki aakhon ko na chubhe */
+  color: rgba(255, 255, 255, 0.4); 
+  user-select: none;
 }
 
 .wasd-text {
-  font-size: 42px;
-  letter-spacing: 8px;
-  margin-bottom: 5px;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: 12px;
+  margin-bottom: 0px;
 }
 
 .arrows {
   display: flex;
-  gap: 20px;
-  font-size: 32px;
-}
-/* hud.component.css mein check karein */
-.hud-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none; /* Ye line honi chahiye taaki mouse 3D scene tak pahunche */
+  justify-content: center;
+  gap: 25px;
+  font-size: 28px;
+  margin-top: -5px;
 }
 
-.action-bar, .nav-btn {
-  pointer-events: auto; /* Sirf buttons ko click hone layak banayein */
+.arrow {
+  opacity: 0.6;
 }
