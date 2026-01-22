@@ -2,8 +2,7 @@
   height: 100vh;
   display: grid;
   place-items: center;
-  /* Same blurred warehouse background effect */
-  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), 
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
               url('https://t3.ftcdn.net/jpg/02/79/99/48/360_F_279994888_zZBXDv5gy1VgTo3Z8yVs6cq9wPvZ3KRs.jpg') no-repeat center center;
   background-size: cover;
   font-family: 'Inter', sans-serif;
@@ -13,29 +12,32 @@
 .glass-card {
   width: min(550px, 90vw);
   padding: 40px;
-  /* Exact Glassmorphism Transparency */
-  background: rgba(255, 255, 255, 0.1); 
-  backdrop-filter: blur(15px); /* Piche ka background dhundla dikhega */
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  /* Premium Glass Effect */
+  background: rgba(255, 255, 255, 0.08); 
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   text-align: center;
 }
 
 .title {
-  font-size: 2.2rem;
-  color: #00d2ff; /* Cyan from your image */
-  margin-bottom: 25px;
-  font-weight: 700;
+  font-size: 2.5rem;
+  /* Sophisticated White/Grey */
+  color: #ffffff; 
+  margin-bottom: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
 .title span {
-  color: #ff00c1; /* Pink from your image */
+  /* Soft Orange (matches the boxes in background) */
+  color: #f39c12; 
 }
 
 .instructions {
-  margin-bottom: 30px;
+  margin-bottom: 35px;
   text-align: left;
 }
 
@@ -43,48 +45,51 @@
   display: flex;
   align-items: flex-start;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .icon {
-  font-size: 24px;
+  font-size: 26px;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
 }
 
 .text strong {
   color: #ffffff;
-  font-size: 15px;
+  font-size: 16px;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .text p {
   margin: 0;
-  color: #eeeeee;
-  font-size: 13px;
-  line-height: 1.4;
+  /* Light grey for less eye strain */
+  color: #cccccc; 
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .text b {
-  color: #00d2ff;
+  /* Soft Blue (matches uniforms) */
+  color: #3498db; 
 }
 
 .gradient-btn {
-  width: 80%;
-  padding: 14px;
-  border: 2px solid #ff00c1; /* Border effect from image */
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent button */
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  /* Solid professional color instead of weird double borders */
+  background: #2c3e50; 
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  outline: 2px solid #00d2ff; /* Double border look */
-  outline-offset: -6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .gradient-btn:hover {
-  background: #ff00c1;
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 0, 193, 0.5);
+  background: #34495e;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
