@@ -118,22 +118,23 @@ export class WarehouseComponent implements AfterViewInit {
   }
 
   private createWarehouse() {
+  // 1. SCENE & LIGHTING
   this.scene.background = new THREE.Color('#e0e0e0');
 
-  // 1. FLOOR (Ise -0.05 niche kiya taaki grid se na takraye)
+  // 2. FLOOR (Flicker fix: y = -0.05)
   const floorGeo = new THREE.PlaneGeometry(100, 100);
   const floorMat = new THREE.MeshStandardMaterial({ color: '#bcbcbc', roughness: 0.8 });
   const floor = new THREE.Mesh(floorGeo, floorMat);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.05; // <--- FLICKER FIX
+  floor.position.y = -0.05; 
   this.scene.add(floor);
 
-  // 2. GRID (Ise 0.05 upar kiya)
+  // 3. GRID (Flicker fix: y = 0.05)
   const grid = new THREE.GridHelper(100, 50, 0x999999, 0xbbbbbb);
-  grid.position.y = 0.05; // <--- FLICKER FIX
+  grid.position.y = 0.05; 
   this.scene.add(grid);
 
-  // 3. BRIGHT CEILING
+  // 4. BRIGHT CEILING
   const ceilingGeo = new THREE.PlaneGeometry(100, 100);
   const ceilingMat = new THREE.MeshStandardMaterial({ color: '#ffffff', side: THREE.DoubleSide });
   const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
@@ -141,41 +142,45 @@ export class WarehouseComponent implements AfterViewInit {
   ceiling.position.y = 8;
   this.scene.add(ceiling);
 
-  // 4. WALLS (Sahi color aur boundary)
+  // 5. WALLS (Boundary logic)
   const wallMat = new THREE.MeshStandardMaterial({ color: '#f0f0f0' });
-  const longWallGeo = new THREE.BoxGeometry(40, 10, 0.5);
   
   // Back Wall
-  const backWall = new THREE.Mesh(longWallGeo, wallMat);
-  backWall.position.set(0, 5, -13); 
+  const backWall = new THREE.Mesh(new THREE.BoxGeometry(60, 10, 0.5), wallMat);
+  backWall.position.set(0, 5, -15); 
   this.scene.add(backWall);
 
-  // Front Wall (S dabane par aap yahan rukenge)
-  const frontWall = new THREE.Mesh(longWallGeo, wallMat);
-  frontWall.position.set(0, 5, 13);
+  // Front Wall
+  const frontWall = new THREE.Mesh(new THREE.BoxGeometry(60, 10, 0.5), wallMat);
+  frontWall.position.set(0, 5, 15);
   this.scene.add(frontWall);
 
   // Side Walls
-  const sideWallGeo = new THREE.BoxGeometry(0.5, 10, 26);
+  const sideWallGeo = new THREE.BoxGeometry(0.5, 10, 30);
   const leftWall = new THREE.Mesh(sideWallGeo, wallMat);
-  leftWall.position.set(-13, 5, 0);
+  leftWall.position.set(-18, 5, 0);
   this.scene.add(leftWall);
 
   const rightWall = new THREE.Mesh(sideWallGeo, wallMat);
-  rightWall.position.set(13, 5, 0);
+  rightWall.position.set(18, 5, 0);
   this.scene.add(rightWall);
 
-  // Shelves Logic (Aapka purana loop...)
-  const aisleCount = 3; 
+  // 6. EQUAL AISLES (Mathematical Balance)
   const shelfLength = 18; 
   const shelfHeight = 3;
+  
+  // Is logic se har rasta (aisle) barabar gap ka banega
+  const aisleSpacing = 10; 
 
-  for (let i = 0; i < aisleCount; i++) {
-    const aisleX = (i - 1) * 8; 
+  for (let i = 0; i < 3; i++) {
+    const aisleX = (i - 1) * aisleSpacing; // i=0 (-10), i=1 (0), i=2 (10)
+    
+    // Left Shelf
     const leftShelf = this.createShelf(shelfLength, shelfHeight);
     leftShelf.position.set(aisleX - 2.5, shelfHeight / 2, 0);
     this.scene.add(leftShelf);
 
+    // Right Shelf
     const rightShelf = this.createShelf(shelfLength, shelfHeight);
     rightShelf.position.set(aisleX + 2.5, shelfHeight / 2, 0);
     this.scene.add(rightShelf);
@@ -296,11 +301,9 @@ export class WarehouseComponent implements AfterViewInit {
 
   private updateMovement(delta: number) {
   const damping = 10;
-  // Velocity calculation with damping
   this.velocity.x -= this.velocity.x * damping * delta;
   this.velocity.z -= this.velocity.z * damping * delta;
 
-  // Input direction
   this.direction.set(0, 0, 0);
   if (this.keys['w']) this.direction.z += 1;
   if (this.keys['s']) this.direction.z -= 1;
@@ -309,7 +312,6 @@ export class WarehouseComponent implements AfterViewInit {
 
   this.direction.normalize();
 
-  // Camera vectors
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion);
   const right = new THREE.Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
   forward.y = 0;
@@ -322,42 +324,37 @@ export class WarehouseComponent implements AfterViewInit {
     this.velocity.z += this.direction.z * this.speed * delta;
   }
 
-  // 1. Agli position calculate karein
   const nextPos = this.camera.position.clone();
   nextPos.addScaledVector(right, this.velocity.x);
   nextPos.addScaledVector(forward, this.velocity.z);
 
-  // 2. SHELF COLLISION CHECK
+  // --- COLLISION LOGIC (Sahi Coordinates: -10, 0, 10) ---
   let isColliding = false;
-  const aisleXPositions = [-8, 0, 8]; 
+  const aisleXPositions = [-10, 0, 10]; 
   
-  aisleXPositions.forEach(aisleX => {
+  for (let aisleX of aisleXPositions) {
     const racksX = [aisleX - 2.5, aisleX + 2.5];
-    racksX.forEach(shelfX => {
-      // Agar camera shelf ke area mein hai (Shelf length -9 to 9)
+    for (let shelfX of racksX) {
       if (nextPos.z > -9.5 && nextPos.z < 9.5) {
-        if (Math.abs(nextPos.x - shelfX) < 1.2) { 
+        if (Math.abs(nextPos.x - shelfX) < 1.3) { 
           isColliding = true;
+          break;
         }
       }
-    });
-  });
+    }
+    if (isColliding) break;
+  }
 
-  // 3. Movement Apply Karein (Agar shelf se nahi takra rahe)
   if (!isColliding) {
     this.camera.position.copy(nextPos);
   } else {
     this.velocity.set(0, 0, 0);
   }
 
-  // 4. STRICT WALL BOUNDARIES (Fixed for your 13-unit walls)
-  // Aapki deewarein 13 par hain, isliye camera ko 12.2 par clamp karna hoga
-  // Taaki aapka camera deewar ke aar-paar na jaye
-  const wallLimit = 12.2; 
-  this.camera.position.x = THREE.MathUtils.clamp(this.camera.position.x, -wallLimit, wallLimit);
-  this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -wallLimit, wallLimit);
-  
-  // Height hamesha 1.6 (human eye level) par lock rakhein
+  // --- WALL BOUNDARY (Insaani level par lock) ---
+  // Clamp values walls se thoda pehle (Walls 15 aur 18 par hain)
+  this.camera.position.x = THREE.MathUtils.clamp(this.camera.position.x, -17.2, 17.2);
+  this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -14.2, 14.2);
   this.camera.position.y = 1.6;
 }
 
