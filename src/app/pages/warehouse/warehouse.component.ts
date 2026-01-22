@@ -56,7 +56,7 @@ export class WarehouseComponent implements AfterViewInit {
     const canvas = this.canvasRef.nativeElement;
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color('#151515');
+    this.scene.background = new THREE.Color('#e0e0e0');
 
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -69,20 +69,16 @@ export class WarehouseComponent implements AfterViewInit {
     this.camera.position.set(0, 1.6, 8);
 
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    // this.renderer.setSize(window.innerWidth, window.innerHeight);
     const wrapper = canvas.parentElement;
     const w = wrapper?.clientWidth ?? window.innerWidth;    
     const h = wrapper?.clientHeight ?? window.innerHeight;
     this.renderer.setSize(w, h);
-
-
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     // lights
-    // this.scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.4)); // Soft light
+    this.scene.add(new THREE.AmbientLight(0xffffff, 0.7)); // Ambient light badhayi
     const spotLight = new THREE.PointLight(0xffffff, 1);
-    spotLight.position.set(0, 5, 0); // Overhead warehouse light
+    spotLight.position.set(5, 15, 5); // Overhead warehouse light
     this.scene.add(spotLight);
 
     const dir = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -110,7 +106,7 @@ export class WarehouseComponent implements AfterViewInit {
   const ambient = new THREE.AmbientLight(0xffffff, 0.5);
   this.scene.add(ambient);
 
-  const overheadLight = new THREE.PointLight(0xffffff, 150);
+  const overheadLight = new THREE.PointLight(0xffffff, 200);
   overheadLight.position.set(0, 10, 0);
   this.scene.add(overheadLight);
 
@@ -122,84 +118,94 @@ export class WarehouseComponent implements AfterViewInit {
   }
 
   private createWarehouse() {
-  // 1. Floor (Jamin) - Bada floor taaki boundary cover rahe
-  const floorGeo = new THREE.PlaneGeometry(60, 60);
-  const floorMat = new THREE.MeshStandardMaterial({ 
-    color: '#1a1a1a', 
-    roughness: 0.8 
-  });
+  this.scene.background = new THREE.Color('#e0e0e0');
+
+  // 1. FLOOR (Ise -0.05 niche kiya taaki grid se na takraye)
+  const floorGeo = new THREE.PlaneGeometry(100, 100);
+  const floorMat = new THREE.MeshStandardMaterial({ color: '#bcbcbc', roughness: 0.8 });
   const floor = new THREE.Mesh(floorGeo, floorMat);
   floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -0.05; // <--- FLICKER FIX
   this.scene.add(floor);
 
-  // Grid Helper
-  const grid = new THREE.GridHelper(60, 30, 0x444444, 0x222222);
+  // 2. GRID (Ise 0.05 upar kiya)
+  const grid = new THREE.GridHelper(100, 50, 0x999999, 0xbbbbbb);
+  grid.position.y = 0.05; // <--- FLICKER FIX
   this.scene.add(grid);
 
-  // 2. ENCLOSED WALLS (Charo taraf ki deewarein)
-  // Material jo thoda dark ho taaki industrial feel aaye
-  const wallMat = new THREE.MeshStandardMaterial({ color: '#111111' });
+  // 3. BRIGHT CEILING
+  const ceilingGeo = new THREE.PlaneGeometry(100, 100);
+  const ceilingMat = new THREE.MeshStandardMaterial({ color: '#ffffff', side: THREE.DoubleSide });
+  const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
+  ceiling.rotation.x = Math.PI / 2;
+  ceiling.position.y = 8;
+  this.scene.add(ceiling);
+
+  // 4. WALLS (Sahi color aur boundary)
+  const wallMat = new THREE.MeshStandardMaterial({ color: '#f0f0f0' });
+  const longWallGeo = new THREE.BoxGeometry(40, 10, 0.5);
   
   // Back Wall
-  const longWallGeo = new THREE.BoxGeometry(40, 10, 1);
   const backWall = new THREE.Mesh(longWallGeo, wallMat);
-  backWall.position.set(0, 5, -20); // Shelves -9 se 9 tak hain, toh ye kaafi peeche hai
+  backWall.position.set(0, 5, -13); 
   this.scene.add(backWall);
 
-  // Front Wall
+  // Front Wall (S dabane par aap yahan rukenge)
   const frontWall = new THREE.Mesh(longWallGeo, wallMat);
-  frontWall.position.set(0, 5, 20);
+  frontWall.position.set(0, 5, 13);
   this.scene.add(frontWall);
 
-  // Side Walls (Left & Right)
-  const sideWallGeo = new THREE.BoxGeometry(1, 10, 40);
+  // Side Walls
+  const sideWallGeo = new THREE.BoxGeometry(0.5, 10, 26);
   const leftWall = new THREE.Mesh(sideWallGeo, wallMat);
-  leftWall.position.set(-20, 5, 0);
+  leftWall.position.set(-13, 5, 0);
   this.scene.add(leftWall);
 
   const rightWall = new THREE.Mesh(sideWallGeo, wallMat);
-  rightWall.position.set(20, 5, 0);
+  rightWall.position.set(13, 5, 0);
   this.scene.add(rightWall);
 
-  // 3. SHELVES CONFIGURATION
+  // Shelves Logic (Aapka purana loop...)
   const aisleCount = 3; 
-  const shelfLength = 18; // Length 18 hai, matlab ye -9 se +9 tak jayegi
+  const shelfLength = 18; 
   const shelfHeight = 3;
 
   for (let i = 0; i < aisleCount; i++) {
-    // Aisles ke beech ka gap
     const aisleX = (i - 1) * 8; 
-
-    // Left Rack of the aisle
     const leftShelf = this.createShelf(shelfLength, shelfHeight);
-    leftShelf.position.set(aisleX - 2.5, shelfHeight / 2, 0); 
+    leftShelf.position.set(aisleX - 2.5, shelfHeight / 2, 0);
     this.scene.add(leftShelf);
 
-    // Right Rack of the aisle
     const rightShelf = this.createShelf(shelfLength, shelfHeight);
     rightShelf.position.set(aisleX + 2.5, shelfHeight / 2, 0);
     this.scene.add(rightShelf);
   }
-
-  // 4. Center Reference (Optional Red Cube)
-  // const testCube = new THREE.Mesh(
-  //   new THREE.BoxGeometry(1, 1, 1),
-  //   new THREE.MeshStandardMaterial({ color: 'red' })
-  // );
-  // testCube.position.set(0, 0.5, 0); // Ground level par
-  // this.scene.add(testCube);
 }
 
   private createShelf(length: number, height: number) {
   const shelfGroup = new THREE.Group();
 
-  // Materials define karein
-  const metalMat = new THREE.MeshStandardMaterial({ color: '#444444', metalness: 0.8, roughness: 0.2 }); 
-  const pillarMat = new THREE.MeshStandardMaterial({ color: '#333333' }); // Pillar ke liye missing material
-  const beamMat = new THREE.MeshStandardMaterial({ color: '#c2410c' }); // Orange beams
+  // Metal Material sudhara (Metallic look ke liye)
+  const metalMat = new THREE.MeshStandardMaterial({ 
+    color: '#555555', 
+    metalness: 0.9, // Zyada metallic
+    roughness: 0.1 
+  }); 
+  
+  const pillarMat = new THREE.MeshStandardMaterial({ 
+    color: '#222222',
+    metalness: 0.8,
+    roughness: 0.2
+  });
+
+  const beamMat = new THREE.MeshStandardMaterial({ 
+    color: '#d9480f', // Bright Industrial Orange
+    metalness: 0.5,
+    roughness: 0.5
+  });
 
   // 1. Vertical Pillars (Rods)
-  const pillarGeo = new THREE.BoxGeometry(0.1, height, 0.1);
+  const pillarGeo = new THREE.BoxGeometry(0.15, height, 0.15);
   const pillarPositions = [
     [-0.6, 0, -length/2], [0.6, 0, -length/2],
     [-0.6, 0, length/2], [0.6, 0, length/2]
@@ -237,23 +243,41 @@ export class WarehouseComponent implements AfterViewInit {
 }
 
   private addBoxesToLevel(group: THREE.Group, yPos: number, length: number) {
-  // Cardboard Brown color
+  // Realistic Cardboard Brown Color
   const boxMat = new THREE.MeshStandardMaterial({ 
-    color: '#a0785a',
-    roughness: 1 
+    color: '#966F33', // Thoda dark aur realistic brown
+    roughness: 0.9,
+    metalness: 0.0
   }); 
+
+  // White Address Tag Material
+  const tagMat = new THREE.MeshStandardMaterial({ 
+    color: '#ffffff',
+    roughness: 0.5,
+    side: THREE.DoubleSide
+  });
   
-  // Har shelf pe random boxes rakhne ke liye loop
   for (let z = -length/2 + 1; z < length/2; z += 1.5) {
-    if (Math.random() > 0.3) { // 70% jagah pe boxes honge
+    if (Math.random() > 0.3) {
+      const boxWidth = 0.8;
       const boxHeight = 0.4 + Math.random() * 0.4;
-      const boxGeo = new THREE.BoxGeometry(0.8, boxHeight, 1.0);
+      const boxDepth = 1.0;
+      
+      const boxGeo = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
       const box = new THREE.Mesh(boxGeo, boxMat);
       
-      // Box ko shelf ke upar thoda random position pe set karein
+      // --- WHITE ADDRESS TAG (Label) ---
+      const tagGeo = new THREE.PlaneGeometry(0.3, 0.2); // Label ki size
+      const tag = new THREE.Mesh(tagGeo, tagMat);
+
+      // Tag ko box ke front face par thoda sa bahar chipkana
+      // (boxDepth / 2) + 0.01 se ye box ke bilkul upar dikhega
+      tag.position.set(0.1, 0, (boxDepth / 2) + 0.01); 
+      box.add(tag); // Tag ko box ke saath group kar diya
+      
       box.position.set(
         (Math.random() - 0.5) * 0.2, 
-        yPos + boxHeight/2 + 0.03, // Plate ke thoda upar
+        yPos + boxHeight/2 + 0.03, 
         z
       );
       group.add(box);
@@ -272,9 +296,11 @@ export class WarehouseComponent implements AfterViewInit {
 
   private updateMovement(delta: number) {
   const damping = 10;
+  // Velocity calculation with damping
   this.velocity.x -= this.velocity.x * damping * delta;
   this.velocity.z -= this.velocity.z * damping * delta;
 
+  // Input direction
   this.direction.set(0, 0, 0);
   if (this.keys['w']) this.direction.z += 1;
   if (this.keys['s']) this.direction.z -= 1;
@@ -283,11 +309,7 @@ export class WarehouseComponent implements AfterViewInit {
 
   this.direction.normalize();
 
-  if (this.direction.length() > 0) {
-    this.velocity.x += this.direction.x * this.speed * delta;
-    this.velocity.z += this.direction.z * this.speed * delta;
-  }
-
+  // Camera vectors
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion);
   const right = new THREE.Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
   forward.y = 0;
@@ -295,26 +317,25 @@ export class WarehouseComponent implements AfterViewInit {
   forward.normalize();
   right.normalize();
 
-  // 1. Agli position calculate karein bina apply kiye
+  if (this.direction.length() > 0) {
+    this.velocity.x += this.direction.x * this.speed * delta;
+    this.velocity.z += this.direction.z * this.speed * delta;
+  }
+
+  // 1. Agli position calculate karein
   const nextPos = this.camera.position.clone();
   nextPos.addScaledVector(right, this.velocity.x);
   nextPos.addScaledVector(forward, this.velocity.z);
 
-  // 2. COLLISION CHECK: Kya hum kisi shelf ke andar hain?
+  // 2. SHELF COLLISION CHECK
   let isColliding = false;
-
-  // Aapke shelf ki layout ke hisab se X positions
-  // i=0 -> -8, i=1 -> 0, i=2 -> 8
   const aisleXPositions = [-8, 0, 8]; 
   
   aisleXPositions.forEach(aisleX => {
-    // Check Left Rack (aisleX - 2.5) aur Right Rack (aisleX + 2.5)
     const racksX = [aisleX - 2.5, aisleX + 2.5];
-    
     racksX.forEach(shelfX => {
-      // Agar camera shelf ki Z-range (-9 to 9) mein hai
+      // Agar camera shelf ke area mein hai (Shelf length -9 to 9)
       if (nextPos.z > -9.5 && nextPos.z < 9.5) {
-        // Aur agar camera shelf ki X-range ke bahut paas hai (Width check)
         if (Math.abs(nextPos.x - shelfX) < 1.2) { 
           isColliding = true;
         }
@@ -322,17 +343,21 @@ export class WarehouseComponent implements AfterViewInit {
     });
   });
 
-  // 3. Agar collision nahi hai, tabhi move karein
+  // 3. Movement Apply Karein (Agar shelf se nahi takra rahe)
   if (!isColliding) {
     this.camera.position.copy(nextPos);
   } else {
-    // Collision hone par velocity zero kar dein taaki jhatka na lage
     this.velocity.set(0, 0, 0);
   }
 
-  // 4. STRICT WALL BOUNDARIES
-  this.camera.position.x = THREE.MathUtils.clamp(this.camera.position.x, -18, 18);
-  this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -18, 18);
+  // 4. STRICT WALL BOUNDARIES (Fixed for your 13-unit walls)
+  // Aapki deewarein 13 par hain, isliye camera ko 12.2 par clamp karna hoga
+  // Taaki aapka camera deewar ke aar-paar na jaye
+  const wallLimit = 12.2; 
+  this.camera.position.x = THREE.MathUtils.clamp(this.camera.position.x, -wallLimit, wallLimit);
+  this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -wallLimit, wallLimit);
+  
+  // Height hamesha 1.6 (human eye level) par lock rakhein
   this.camera.position.y = 1.6;
 }
 
