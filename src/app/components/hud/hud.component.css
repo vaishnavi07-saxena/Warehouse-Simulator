@@ -79,36 +79,6 @@
   gap: 20px;
   font-size: 32px;
 }
-
-/* Top Right Mini-map */
-.minimap-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.minimap {
-  width: 150px;
-  height: 150px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  border-radius: 50%; /* Circle look like image */
-  position: relative;
-  backdrop-filter: blur(5px);
-}
-
-.player-dot {
-  width: 10px;
-  height: 10px;
-  background: #00f2ff;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #00f2ff;
-}
-
 /* hud.component.css mein check karein */
 .hud-overlay {
   position: absolute;

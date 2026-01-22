@@ -2,24 +2,89 @@
   height: 100vh;
   display: grid;
   place-items: center;
-  background: #0f0f0f;
-  color: white;
+  /* Same blurred warehouse background effect */
+  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), 
+              url('https://t3.ftcdn.net/jpg/02/79/99/48/360_F_279994888_zZBXDv5gy1VgTo3Z8yVs6cq9wPvZ3KRs.jpg') no-repeat center center;
+  background-size: cover;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
-.card {
-  width: min(520px, 90vw);
-  padding: 30px;
-  border-radius: 16px;
-  background: #1a1a1a;
+.glass-card {
+  width: min(550px, 90vw);
+  padding: 40px;
+  /* Exact Glassmorphism Transparency */
+  background: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(15px); /* Piche ka background dhundla dikhega */
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-button {
-  margin-top: 16px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+.title {
+  font-size: 2.2rem;
+  color: #00d2ff; /* Cyan from your image */
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.title span {
+  color: #ff00c1; /* Pink from your image */
+}
+
+.instructions {
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.instr-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.text strong {
+  color: #ffffff;
+  font-size: 15px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.text p {
+  margin: 0;
+  color: #eeeeee;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.text b {
+  color: #00d2ff;
+}
+
+.gradient-btn {
+  width: 80%;
+  padding: 14px;
+  border: 2px solid #ff00c1; /* Border effect from image */
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent button */
+  color: white;
   font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: 2px solid #00d2ff; /* Double border look */
+  outline-offset: -6px;
+}
+
+.gradient-btn:hover {
+  background: #ff00c1;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 0, 193, 0.5);
 }
