@@ -9,16 +9,15 @@ This project includes a clean **Landing Page (Outside View)** and a fully intera
 ## ✨ Features
 
 ✅ **Landing Page UI (OutsideComponent)**  
-- Glassmorphism premium design  
+- Glassmorphism design  
 - Instructions for movement & navigation  
 - "Enter Warehouse" button with routing
 
 ✅ **3D Warehouse Scene (WarehouseComponent)**  
 - Three.js scene setup with camera + renderer  
 - Warehouse floor + grid helper
-- Realistic shelves with metal beams and cardboard boxes  
+- Realistic shelves and cardboard boxes  
 - Ceiling + walls for warehouse environment  
-- Lighting setup (ambient + point light)
 
 ✅ **HUD Overlay (HudComponent)**  
 - Glass-style exit button  
@@ -55,8 +54,3 @@ This project includes a clean **Landing Page (Outside View)** and a fully intera
 - **Three.js**
 - TypeScript
 - HTML + CSS (Glass UI Theme)
-
----
-
-## 📁 Project Structure
-
