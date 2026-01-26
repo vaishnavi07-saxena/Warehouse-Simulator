@@ -36,34 +36,3 @@
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
 }
-
-/* Center Movement Overlay (WASD) */
-.movement-overlay {
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  /* Soft greyish-white taaki aakhon ko na chubhe */
-  color: rgba(255, 255, 255, 0.4); 
-  user-select: none;
-}
-
-.wasd-text {
-  font-size: 38px;
-  font-weight: 600;
-  letter-spacing: 12px;
-  margin-bottom: 0px;
-}
-
-.arrows {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  font-size: 28px;
-  margin-top: -5px;
-}
-
-.arrow {
-  opacity: 0.6;
-}
