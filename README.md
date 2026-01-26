@@ -1,59 +1,56 @@
-# WarehouseSimulator
+# 🏭 Warehouse Simulator (Angular + Three.js)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+A **3D Warehouse Simulator** built using **Angular Standalone Components** and **Three.js**, where the user can enter a warehouse, explore racks, and move around using **WASD controls** with mouse-based camera look.
 
-## Development server
+This project includes a clean **Landing Page (Outside View)** and a fully interactive **Warehouse Scene** with shelves, boxes, lighting, and basic collision + boundary movement.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## ✨ Features
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+✅ **Landing Page UI (OutsideComponent)**  
+- Glassmorphism design  
+- Instructions for movement & navigation  
+- "Enter Warehouse" button with routing
 
-## Code scaffolding
+✅ **3D Warehouse Scene (WarehouseComponent)**  
+- Three.js scene setup with camera + renderer  
+- Warehouse floor + grid helper
+- Realistic shelves and cardboard boxes  
+- Ceiling + walls for warehouse environment  
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+✅ **HUD Overlay (HudComponent)**  
+- Glass-style exit button  
+- WASD movement overlay with arrows  
+- Click `Exit Warehouse` to return back to landing page
 
-```bash
-ng generate component component-name
-```
+✅ **Movement + Mouse Look**  
+- Move with **WASD**  
+- Rotate view by **click + hold + drag mouse**
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+✅ **Collision + Boundary System**  
+- Prevents going through racks  
+- Keeps camera inside warehouse walls  
+- Locks camera height at human eye level (1.6)
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## 🕹️ Controls
 
-To build the project run:
+| Action | Control |
+|------|---------|
+| Move Forward | `W` |
+| Move Backward | `S` |
+| Move Left | `A` |
+| Move Right | `D` |
+| Look Around | Hold Mouse Click + Drag |
+| Exit Warehouse | `Exit Warehouse` Button |
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🧰 Tech Stack
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Angular 19 (Standalone Components)**
+- **Three.js**
+- TypeScript
+- HTML + CSS (Glass UI Theme)
