@@ -144,15 +144,14 @@ export class WarehouseComponent implements AfterViewInit {
     rightWall.position.set(18, 5, 0);
     this.scene.add(rightWall);
 
-    // 6. EQUAL AISLES (Mathematical Balance)
+    // 6. EQUAL AISLES
     const shelfLength = 18; 
     const shelfHeight = 3;
-    
-    // Is logic se har rasta (aisle) barabar gap ka banega
+
     const aisleSpacing = 10; 
 
     for (let i = 0; i < 3; i++) {
-      const aisleX = (i - 1) * aisleSpacing; // i=0 (-10), i=1 (0), i=2 (10)
+      const aisleX = (i - 1) * aisleSpacing;
       
       // Left Shelf
       const leftShelf = this.createShelf(shelfLength, shelfHeight);
@@ -169,10 +168,10 @@ export class WarehouseComponent implements AfterViewInit {
   private createShelf(length: number, height: number) {
   const shelfGroup = new THREE.Group();
 
-  // Metal Material sudhara (Metallic look ke liye)
+  // Metal Material (Metallic look ke liye)
   const metalMat = new THREE.MeshStandardMaterial({ 
     color: '#555555', 
-    metalness: 0.9, // Zyada metallic
+    metalness: 0.9,
     roughness: 0.1 
   }); 
   
@@ -183,7 +182,7 @@ export class WarehouseComponent implements AfterViewInit {
   });
 
   const beamMat = new THREE.MeshStandardMaterial({ 
-    color: '#d9480f', // Bright Industrial Orange
+    color: '#d9480f',
     metalness: 0.5,
     roughness: 0.5
   });
@@ -196,7 +195,7 @@ export class WarehouseComponent implements AfterViewInit {
   ];
 
   pillarPositions.forEach(pos => {
-    const pillar = new THREE.Mesh(pillarGeo, pillarMat); // Ab pillarMat mil jayega
+    const pillar = new THREE.Mesh(pillarGeo, pillarMat);
     pillar.position.set(pos[0], 0, pos[2]);
     shelfGroup.add(pillar);
   });
@@ -250,7 +249,7 @@ export class WarehouseComponent implements AfterViewInit {
       const boxGeo = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
       const box = new THREE.Mesh(boxGeo, boxMat);
       
-      // --- WHITE ADDRESS TAG (Label) ---
+      //WHITE TAG
       const tagGeo = new THREE.PlaneGeometry(0.3, 0.2); // Label ki size
       const tag = new THREE.Mesh(tagGeo, tagMat);
 
@@ -279,9 +278,6 @@ export class WarehouseComponent implements AfterViewInit {
   };
 
   private updateMovement(delta: number) {
-  const damping = 10;
-  this.velocity.x -= this.velocity.x * damping * delta;
-  this.velocity.z -= this.velocity.z * damping * delta;
 
   this.direction.set(0, 0, 0);
   if (this.keys['w']) this.direction.z += 1;
@@ -307,7 +303,11 @@ export class WarehouseComponent implements AfterViewInit {
   nextPos.addScaledVector(right, this.velocity.x);
   nextPos.addScaledVector(forward, this.velocity.z);
 
-  // --- COLLISION LOGIC (Sahi Coordinates: -10, 0, 10) ---
+  const damping = 10; //Friction (smooth stop)
+  this.velocity.x -= this.velocity.x * damping * delta;
+  this.velocity.z -= this.velocity.z * damping * delta;
+
+  // COLLISION LOGIC
   let isColliding = false;
   const aisleXPositions = [-10, 0, 10]; 
   
@@ -330,7 +330,7 @@ export class WarehouseComponent implements AfterViewInit {
     this.velocity.set(0, 0, 0);
   }
 
-  // --- WALL BOUNDARY (Insaani level par lock) ---
+  // WALL BOUNDARY
   // Clamp values walls se thoda pehle (Walls 15 aur 18 par hain)
   this.camera.position.x = THREE.MathUtils.clamp(this.camera.position.x, -17.2, 17.2);
   this.camera.position.z = THREE.MathUtils.clamp(this.camera.position.z, -14.2, 14.2);
