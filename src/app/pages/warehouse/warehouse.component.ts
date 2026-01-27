@@ -76,116 +76,95 @@ export class WarehouseComponent implements AfterViewInit {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     // lights
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.7)); // Ambient light badhayi
-    const spotLight = new THREE.PointLight(0xffffff, 1);
-    spotLight.position.set(5, 15, 5); // Overhead warehouse light
-    this.scene.add(spotLight);
+    this.scene.add(new THREE.AmbientLight(0xffffff, 1.4)); // Ambient light badhayi
 
-    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-    dir.position.set(10, 10, 5);
-    this.scene.add(dir);
     this.camera.lookAt(0, 1.6, 0);
 
-    this.scene.background = new THREE.Color('#1a1a1a');
-  
-  // Floor with grid for Street View feel
-  const floorGeo = new THREE.PlaneGeometry(100, 100);
-  const floorMat = new THREE.MeshStandardMaterial({ 
-    color: '#222222', 
-    roughness: 0.8 
-  });
-  const floor = new THREE.Mesh(floorGeo, floorMat);
-  floor.rotation.x = -Math.PI / 2;
-  this.scene.add(floor);
+    // Lights - Image jaisa soft look
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    this.scene.add(ambient);
 
-  // Add Grid Helper
-  const grid = new THREE.GridHelper(100, 50, 0x444444, 0x222222);
-  this.scene.add(grid);
+    const overheadLight = new THREE.PointLight(0xffffff, 200);
+    overheadLight.position.set(0, 10, 0);
+    this.scene.add(overheadLight);
 
-  // Lights - Image jaisa soft look
-  const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-  this.scene.add(ambient);
+    this.yaw = 0; 
+    this.pitch = 0;
 
-  const overheadLight = new THREE.PointLight(0xffffff, 200);
-  overheadLight.position.set(0, 10, 0);
-  this.scene.add(overheadLight);
-
-  this.yaw = 0; 
-  this.pitch = 0;
-
-  this.camera.rotation.order = 'YXZ';
+    this.camera.rotation.order = 'YXZ';
 
   }
 
   private createWarehouse() {
-  // 1. SCENE & LIGHTING
-  this.scene.background = new THREE.Color('#e0e0e0');
+    // Floor with grid for Street View feel
+    const floorGeo = new THREE.PlaneGeometry(100, 100);
+    const floorMat = new THREE.MeshStandardMaterial({ 
+      color: '#222222', 
+      roughness: 0.8 
+    });
 
-  // 2. FLOOR (Flicker fix: y = -0.05)
-  const floorGeo = new THREE.PlaneGeometry(100, 100);
-  const floorMat = new THREE.MeshStandardMaterial({ color: '#bcbcbc', roughness: 0.8 });
-  const floor = new THREE.Mesh(floorGeo, floorMat);
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.05; 
-  this.scene.add(floor);
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -0.05; 
+    this.scene.add(floor);
 
-  // 3. GRID (Flicker fix: y = 0.05)
-  const grid = new THREE.GridHelper(100, 50, 0x999999, 0xbbbbbb);
-  grid.position.y = 0.05; 
-  this.scene.add(grid);
+    // 3. GRID (Flicker fix: y = 0.05)
+    const grid = new THREE.GridHelper(100, 50, 0x999999, 0xbbbbbb);
+    grid.position.y = 0.05; 
+    this.scene.add(grid);
 
-  // 4. BRIGHT CEILING
-  const ceilingGeo = new THREE.PlaneGeometry(100, 100);
-  const ceilingMat = new THREE.MeshStandardMaterial({ color: '#ffffff', side: THREE.DoubleSide });
-  const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
-  ceiling.rotation.x = Math.PI / 2;
-  ceiling.position.y = 8;
-  this.scene.add(ceiling);
+    // 4. BRIGHT CEILING
+    const ceilingGeo = new THREE.PlaneGeometry(100, 100);
+    const ceilingMat = new THREE.MeshStandardMaterial({ color: '#ffffff', side: THREE.DoubleSide });
+    const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
+    ceiling.rotation.x = Math.PI / 2;
+    ceiling.position.y = 8;
+    this.scene.add(ceiling);
 
-  // 5. WALLS (Boundary logic)
-  const wallMat = new THREE.MeshStandardMaterial({ color: '#f0f0f0' });
-  
-  // Back Wall
-  const backWall = new THREE.Mesh(new THREE.BoxGeometry(60, 10, 0.5), wallMat);
-  backWall.position.set(0, 5, -15); 
-  this.scene.add(backWall);
-
-  // Front Wall
-  const frontWall = new THREE.Mesh(new THREE.BoxGeometry(60, 10, 0.5), wallMat);
-  frontWall.position.set(0, 5, 15);
-  this.scene.add(frontWall);
-
-  // Side Walls
-  const sideWallGeo = new THREE.BoxGeometry(0.5, 10, 30);
-  const leftWall = new THREE.Mesh(sideWallGeo, wallMat);
-  leftWall.position.set(-18, 5, 0);
-  this.scene.add(leftWall);
-
-  const rightWall = new THREE.Mesh(sideWallGeo, wallMat);
-  rightWall.position.set(18, 5, 0);
-  this.scene.add(rightWall);
-
-  // 6. EQUAL AISLES (Mathematical Balance)
-  const shelfLength = 18; 
-  const shelfHeight = 3;
-  
-  // Is logic se har rasta (aisle) barabar gap ka banega
-  const aisleSpacing = 10; 
-
-  for (let i = 0; i < 3; i++) {
-    const aisleX = (i - 1) * aisleSpacing; // i=0 (-10), i=1 (0), i=2 (10)
+    // 5. WALLS (Boundary logic)
+    const wallMat = new THREE.MeshStandardMaterial({ color: '#f0f0f0' });
     
-    // Left Shelf
-    const leftShelf = this.createShelf(shelfLength, shelfHeight);
-    leftShelf.position.set(aisleX - 2.5, shelfHeight / 2, 0);
-    this.scene.add(leftShelf);
+    // Back Wall
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(60, 10, 0.5), wallMat);
+    backWall.position.set(0, 5, -15); 
+    this.scene.add(backWall);
 
-    // Right Shelf
-    const rightShelf = this.createShelf(shelfLength, shelfHeight);
-    rightShelf.position.set(aisleX + 2.5, shelfHeight / 2, 0);
-    this.scene.add(rightShelf);
+    // Front Wall
+    const frontWall = new THREE.Mesh(new THREE.BoxGeometry(60, 10, 0.5), wallMat);
+    frontWall.position.set(0, 5, 15);
+    this.scene.add(frontWall);
+
+    // Side Walls
+    const sideWallGeo = new THREE.BoxGeometry(0.5, 10, 30);
+    const leftWall = new THREE.Mesh(sideWallGeo, wallMat);
+    leftWall.position.set(-18, 5, 0);
+    this.scene.add(leftWall);
+
+    const rightWall = new THREE.Mesh(sideWallGeo, wallMat);
+    rightWall.position.set(18, 5, 0);
+    this.scene.add(rightWall);
+
+    // 6. EQUAL AISLES (Mathematical Balance)
+    const shelfLength = 18; 
+    const shelfHeight = 3;
+    
+    // Is logic se har rasta (aisle) barabar gap ka banega
+    const aisleSpacing = 10; 
+
+    for (let i = 0; i < 3; i++) {
+      const aisleX = (i - 1) * aisleSpacing; // i=0 (-10), i=1 (0), i=2 (10)
+      
+      // Left Shelf
+      const leftShelf = this.createShelf(shelfLength, shelfHeight);
+      leftShelf.position.set(aisleX - 2.5, shelfHeight / 2, 0);
+      this.scene.add(leftShelf);
+
+      // Right Shelf
+      const rightShelf = this.createShelf(shelfLength, shelfHeight);
+      rightShelf.position.set(aisleX + 2.5, shelfHeight / 2, 0);
+      this.scene.add(rightShelf);
+    }
   }
-}
 
   private createShelf(length: number, height: number) {
   const shelfGroup = new THREE.Group();
